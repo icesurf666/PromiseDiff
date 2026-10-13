@@ -20,7 +20,7 @@ uvicorn app.main:app --reload
 cd ../frontend && npm install && npm run dev
 ```
 
-Configuration: `OLLAMA_BASE_URL` (default `http://localhost:11434`), `OLLAMA_MODEL` (default `gemma3:4b`), `OLLAMA_TIMEOUT` (default `45` seconds), and `CORS_ORIGINS` (default `http://localhost:5173`).
+Configuration: `OLLAMA_BASE_URL` (default `http://localhost:11434`), `OLLAMA_MODEL` (default `gemma3:4b`), `OLLAMA_TIMEOUT` (default `45` seconds), `CORS_ORIGINS` (default `http://localhost:5173`), and frontend `VITE_GITHUB_URL` (the public repository URL displayed in the header).
 
 Create the example fixture with `python examples/create_budget_fixture.py`, then copy it into `frontend/public/examples/`. The Try Example button uses that actual PDF and the regular analysis endpoint.
 

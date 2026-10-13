@@ -68,3 +68,12 @@ def matches_size(page: PageInfo, target: tuple[float, float]) -> bool:
 
 def has_complete_edition(pdf: InspectedPdf, target: tuple[float, float]) -> bool:
     return bool(pdf.pages) and all(matches_size(page, target) for page in pdf.pages)
+
+
+def enforce_collection_limits(documents: list[InspectedPdf]) -> None:
+    pages = sum(document.page_count for document in documents)
+    text = sum(len(page.text) for document in documents for page in document.pages)
+    if pages > MAX_PAGES:
+        raise DocumentError(f"Combined PDF page limit ({MAX_PAGES}) exceeded")
+    if text > MAX_TEXT:
+        raise DocumentError("Combined extracted text limit exceeded")

@@ -3,7 +3,15 @@ from io import BytesIO
 import fitz
 import pytest
 
-from app.documents import A4, DocumentError, inspect_pdf, matches_size
+from app.documents import (
+    A4,
+    DocumentError,
+    InspectedPdf,
+    PageInfo,
+    enforce_collection_limits,
+    inspect_pdf,
+    matches_size,
+)
 
 
 def pdf_bytes(encrypted: bool = False) -> bytes:
@@ -27,3 +35,9 @@ def test_detects_landscape_a4_and_rejects_invalid_pdf():
 def test_rejects_encrypted_pdf():
     with pytest.raises(DocumentError, match="encrypted"):
         inspect_pdf("locked.pdf", pdf_bytes(encrypted=True))
+
+
+def test_combined_page_limit_is_enforced():
+    pages = tuple(PageInfo(number, "", 1, 1) for number in range(1, 162))
+    with pytest.raises(DocumentError, match="Combined PDF page"):
+        enforce_collection_limits([InspectedPdf("x.pdf", pages, False)])

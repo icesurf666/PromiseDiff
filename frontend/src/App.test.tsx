@@ -56,4 +56,11 @@ describe('PromiseDiff form', () => {
     expect(screen.getByText('Budget review')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'EXPORT .MD' })).toBeInTheDocument()
   })
+
+  it('rejects oversized client-side uploads', async () => {
+    render(<App />)
+    const oversized = new File([new Uint8Array(12 * 1024 * 1024 + 1)], 'huge.pdf')
+    fireEvent.change(screen.getByLabelText('Actual download'), { target: { files: [oversized] } })
+    expect(await screen.findByText('Upload exceeds the 12 MB limit')).toBeInTheDocument()
+  })
 })

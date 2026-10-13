@@ -4,7 +4,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from .archives import ArchiveError, unpack_pdfs
-from .documents import DocumentError, inspect_pdf
+from .documents import DocumentError, enforce_collection_limits, inspect_pdf
 from .llm_client import ModelError, ModelTimeout, ModelUnavailable, OllamaClient
 from .service import analyze
 
@@ -36,6 +36,7 @@ async def analyze_product(description: str = Form(...), file: UploadFile = File(
         else:
             raise DocumentError("Upload must be a PDF or ZIP containing PDFs")
         documents = [inspect_pdf(filename, content) for filename, content in members]
+        enforce_collection_limits(documents)
     except (ArchiveError, DocumentError) as exc:
         raise HTTPException(400, str(exc)) from exc
     try:
