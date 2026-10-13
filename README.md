@@ -22,6 +22,8 @@ cd ../frontend && npm install && npm run dev
 
 Configuration: `OLLAMA_BASE_URL` (default `http://localhost:11434`), `OLLAMA_MODEL` (default `gemma3:4b`), `OLLAMA_TIMEOUT` (default `45` seconds), `CORS_ORIGINS` (default `http://localhost:5173`), and frontend `VITE_GITHUB_URL` (the public repository URL displayed in the header).
 
+Copy `.env.example` to `.env` if you want a starting point. Before starting FastAPI, load it with `set -a && source ../.env && set +a` from `backend/`; copy it to `frontend/.env.local` before starting Vite. `VITE_*` variables are read by Vite when it starts.
+
 Want to try it quickly? Create the example fixture with `python examples/create_budget_fixture.py`, then copy it into `frontend/public/examples/`. The Try Example button uses that real PDF and the same API as an ordinary upload.
 
 ## Verify
@@ -46,4 +48,4 @@ python benchmark/generate_cases.py
 python benchmark/run.py
 ```
 
-The runner saves raw responses, labels, and per-case timing in `benchmark/results.json`; it does not invent a score. Contributions should bring tests, keep production Python/TypeScript files under 200 physical lines, and preserve the rule that evidence must be checked before it is shown. MIT licensed.
+The runner saves raw responses, labels, and per-case timing in `benchmark/results.json`; it does not invent a score. GitHub Actions runs the backend and frontend checks on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the project rules. MIT licensed.
