@@ -33,16 +33,6 @@ Every result keeps the method and the evidence that led to it.
 
 ![Four verdicts distinguish evidence from uncertainty](https://www.pkazantsev.com/writing/promise-diff/verdict-matrix.png)
 
-```mermaid
-flowchart LR
-  L[Product listing] --> C[Gemma claim extraction]
-  U[PDF or ZIP] --> I[Safe document inspection]
-  C --> V[Claim verifier]
-  I --> V
-  V --> E[Evidence validation]
-  E --> R[Auditable report]
-```
-
 For example, a page-count claim is deterministic:
 
 ```text
@@ -59,7 +49,7 @@ Result:  SUPPORTED — DETERMINISTIC
 
 The demo uses a real 48-page A4 Budget Planner PDF. Nothing is mocked.
 
-I recorded the product walkthrough with [ProgressCut](https://github.com/icesurf666/progress-cut), my local-first tool for turning a longer screen recording into a short visual story. It is a useful pairing: PromiseDiff checks the release before it ships; ProgressCut helps explain the release after it is ready.
+I used [ProgressCut](https://github.com/icesurf666/progress-cut) to cut the screen recording down to a short walkthrough.
 
 The listing promises:
 
@@ -101,19 +91,7 @@ If the document is scanned, the claim scope is ambiguous, a citation points to a
 
 ### Architecture and safety
 
-It is a small React + FastAPI app, with no need for a complicated distributed setup:
-
-```mermaid
-flowchart TB
-  UI[React / TypeScript] --> API[FastAPI]
-  API --> ZIP[ZIP boundary checks]
-  API --> PDF[PyMuPDF inspector]
-  API --> O[Ollama + Gemma]
-  PDF --> D[Deterministic verifier]
-  O --> S[Semantic verifier]
-  D --> EV[Evidence validator]
-  S --> EV
-```
+It is a small React + FastAPI app. The verification-flow diagram above shows how the pieces connect.
 
 Uploads are untrusted, so the backend puts tight boundaries around them: size, PDF count, total pages, extracted text, ZIP ratio, file types, and expanded ZIP size. It rejects traversal paths, duplicate entries, encrypted PDFs, nested archives, and corrupt files. The original upload is never saved.
 
