@@ -10,6 +10,13 @@ def test_a4_and_letter_claim_is_normalized_to_dimensions():
     assert accepted[0].expected_value == ["A4", "US Letter"]
 
 
+def test_single_a4_claim_is_normalized_to_dimensions():
+    quote = "Includes an A4 PDF edition."
+    claim = Claim(id="1", text=quote, type=ClaimType.FILE_FORMAT, source_quote=quote)
+    accepted = validate_claims(quote, [claim])
+    assert accepted[0].expected_value == ["A4"]
+
+
 def test_invented_listing_quote_is_discarded():
     claim = Claim(id="1", text="x", type=ClaimType.SEMANTIC_CONTENT, source_quote="invented")
     assert validate_claims("actual listing", [claim]) == []

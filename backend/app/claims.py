@@ -18,9 +18,10 @@ def validate_claims(description: str, claims: list[Claim]) -> list[Claim]:
         if claim.source_quote not in description:
             continue
         quote = claim.source_quote.lower()
-        if "a4" in quote and ("letter" in quote or "us letter" in quote):
+        dimensions = (["A4"] if "a4" in quote else []) + (["US Letter"] if "letter" in quote else [])
+        if dimensions:
             claim = claim.model_copy(
-                update={"type": ClaimType.PAGE_DIMENSIONS, "expected_value": ["A4", "US Letter"]}
+                update={"type": ClaimType.PAGE_DIMENSIONS, "expected_value": dimensions}
             )
         elif "canva" in quote or "goodnotes" in quote:
             claim = claim.model_copy(update={"type": ClaimType.COMPATIBILITY})
