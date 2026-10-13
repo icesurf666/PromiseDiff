@@ -14,6 +14,8 @@ That mismatch is expensive in a very small-business way: refund requests, one-st
 
 Paste a listing. Upload the actual PDF or ZIP. Get an evidence-backed diff between the promise and the deliverable.
 
+**The important design choice:** PromiseDiff does not turn missing text into a failure. It distinguishes a measured contradiction from a claim that the available files simply cannot prove.
+
 ## What I built
 
 PromiseDiff separates statements into four honest outcomes:
@@ -62,7 +64,7 @@ Includes savings goal trackers.
 
 The delivered file contains only the A4 edition. PromiseDiff detects the page count as supported and the missing US Letter edition as contradicted. The UI lets a seller expand evidence and export the verified report as Markdown.
 
-> Add a 30–60 second screen recording here: click **Try Example**, click **Verify Product**, expand a finding, then export the report.
+<!-- Before publishing: embed a 30–60 second recording here. Show Try Example → Verify Product → expanded evidence → Markdown export. -->
 
 ## Why a hybrid system instead of “ask the model”? 
 
@@ -79,9 +81,9 @@ Letting a language model count PDF pages is both slower and less reliable than r
 
 The core safety invariant is:
 
-\[
-\text{missing evidence} \not\Rightarrow \text{contradiction}
-\]
+```text
+missing evidence != contradiction
+```
 
 If the document is scanned, the claim scope is ambiguous, a citation points to a nonexistent page, or a quote does not occur in extracted text, the answer is `UNVERIFIED`.
 
@@ -113,18 +115,17 @@ The model pipeline is intentionally bounded:
 
 ## Why open innovation matters
 
-PromiseDiff is useful precisely because sellers may be working with unpublished products: course materials, templates, client-facing downloads, and draft listings. Local Ollama inference means that product text and extracted PDF content stay on the seller’s machine by default.
+PromiseDiff is useful precisely because sellers may be working with unpublished products: course materials, templates, client-facing downloads, and draft listings. When run locally, Ollama inference keeps product text and extracted PDF content on the seller’s machine by default.
 
-Open-weight Gemma makes the side-hustle economics practical too. There is no per-audit commercial API bill and no hosted dependency required for the core workflow. A seller can run the same QA process repeatedly before every release, while retaining control of the model and data path.
+Open-weight Gemma makes the side-hustle economics practical too. There is no per-audit third-party inference API bill when a seller runs it locally, although they still bear their own hardware or hosting cost. A seller can run the same QA process repeatedly before every release while retaining control of the model and data path.
 
 ## Reproducible benchmark, including a failure
 
 I generated ten independently labelled synthetic PDF cases and ran them through the same local API used by the UI. The runner records raw responses and latency in `benchmark/results.json`.
 
-\[
-\text{Exact-label accuracy} = \frac{1}{N}\sum_{i=1}^{N}\mathbb{1}(\hat{y_i}=y_i)
-= \frac{9}{10}=0.90
-\]
+```text
+exact-label accuracy = correct labels / total cases = 9 / 10 = 90%
+```
 
 ```mermaid
 xychart-beta
@@ -145,6 +146,13 @@ xychart-beta
 
 The failed case is the most useful result. The listing claimed a **debt repayment worksheet** and the PDF said **Loan Balance Reduction Tracker**. The model did not produce evidence strong enough to accept, so PromiseDiff returned `UNVERIFIED` instead of inventing support. This is a product limitation to improve, not a benchmark result to hide.
 
+## Known limitations
+
+- The benchmark is intentionally small and synthetic; it does not establish performance on the full diversity of seller PDFs.
+- Scanned documents without extractable text can still receive metadata checks, but semantic claims remain unverified.
+- The current retrieval pass can miss paraphrases. In the benchmark, “debt repayment worksheet” versus “Loan Balance Reduction Tracker” stayed unverified rather than being promoted to a false positive.
+- Public deployments should isolate PDF processing with strict resource limits.
+
 ## What I would build next
 
 - Better paraphrase retrieval before semantic evaluation.
@@ -154,12 +162,14 @@ The failed case is the most useful result. The listing claimed a **debt repaymen
 
 ## Code
 
-> Add the public GitHub repository URL here after publishing. The repository includes local setup, the real example PDF, test commands, security limitations, and the benchmark runner.
+<!-- Before publishing: replace the URL below with the public GitHub repository. -->
+
+[PromiseDiff source code](https://github.com/REPLACE_WITH_OWNER/PromiseDiff)
+
+The repository includes local setup, the real example PDF, test commands, security limitations, and the benchmark runner.
 
 ## Prize categories
 
 - Best Use of Gemma
 
-## My first user
-
-I am looking for an Etsy/Gumroad seller to run one actual listing through PromiseDiff. I will publish their feedback only with permission and will not claim a paying customer before one exists.
+<!-- Optional: add a real user story here only after receiving permission. Do not fabricate one. -->
