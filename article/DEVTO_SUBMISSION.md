@@ -18,7 +18,7 @@ Paste in the listing. Upload the actual PDF or ZIP. PromiseDiff shows what the f
 
 ![PromiseDiff checks listing promises against delivered files](assets/promise-diff-hero.svg)
 
-## What I built
+## What I Built
 
 Every claim gets one of four plain outcomes:
 
@@ -76,7 +76,9 @@ The upload only has the A4 edition. PromiseDiff confirms the page count, flags t
 
 <!-- Before publishing on DEV: upload this GIF and replace the local asset link with DEV's image URL. -->
 
-## Why a hybrid system instead of “ask the model”? 
+## How I Built It
+
+### Why a hybrid system instead of “ask the model”?
 
 Some questions have a simple answer; others need interpretation.
 
@@ -99,7 +101,7 @@ missing evidence != contradiction
 
 If the document is scanned, the claim scope is ambiguous, a citation points to a nonexistent page, or a quote does not occur in extracted text, the answer is `UNVERIFIED`.
 
-## How I built it
+### Architecture and safety
 
 It is a small React + FastAPI app, with no need for a complicated distributed setup:
 
@@ -127,7 +129,7 @@ The model work is deliberately kept small:
 4. Gemma evaluates semantic correspondence in batch.
 5. Evidence validation checks filename, page, and exact quote before serialization.
 
-## Why open innovation matters
+## Why Does Open Innovation Matter?
 
 This matters because many sellers are working on unpublished material: course notes, templates, client downloads, and draft listings. With the local setup, Ollama keeps the listing text and extracted PDF text on the seller’s machine.
 
@@ -184,7 +186,7 @@ The miss is the useful bit. The listing said **debt repayment worksheet** and th
 
 The repository has the local setup, real example PDF, test commands, security notes, and benchmark runner.
 
-## Prize categories
+## Prize Categories
 
 - Best Use of Gemma
 
