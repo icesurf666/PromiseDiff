@@ -59,6 +59,8 @@ Result:  SUPPORTED — DETERMINISTIC
 
 The demo uses a real 48-page A4 Budget Planner PDF. Nothing is mocked.
 
+I recorded the product walkthrough with [ProgressCut](https://github.com/icesurf666/progress-cut), my local-first tool for turning a longer screen recording into a short visual story. It is a useful pairing: PromiseDiff checks the release before it ships; ProgressCut helps explain the release after it is ready.
+
 The listing promises:
 
 ```text
@@ -70,7 +72,9 @@ Includes savings goal trackers.
 
 The upload only has the A4 edition. PromiseDiff confirms the page count, flags the missing US Letter version, and lets the seller open the evidence or export the report as Markdown.
 
-<!-- Before publishing: embed a 30–60 second recording here. Show Try Example → Verify Product → expanded evidence → Markdown export. -->
+![A short PromiseDiff walkthrough, recorded and cut with ProgressCut](assets/progresscut-demo.gif)
+
+<!-- Before publishing on DEV: upload this GIF and replace the local asset link with DEV's image URL. -->
 
 ## Why a hybrid system instead of “ask the model”? 
 

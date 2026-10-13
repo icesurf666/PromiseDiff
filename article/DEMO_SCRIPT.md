@@ -1,5 +1,7 @@
 # PromiseDiff demo script
 
+Record this in [ProgressCut](https://github.com/icesurf666/progress-cut) if you want to trim the full screen capture into a short walkthrough. PromiseDiff checks the release; ProgressCut helps show it.
+
 1. Open the app: “PromiseDiff is a quick last check before a digital product goes live. It compares the listing to what the customer will actually download.”
 2. Click **Try Example**. Point out the real 48-page PDF and the prefilled listing.
 3. Click **Verify Product**. Say that Gemma is running locally through Ollama while the app checks the files.
