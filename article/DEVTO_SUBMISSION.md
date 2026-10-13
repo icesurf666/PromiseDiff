@@ -180,7 +180,7 @@ The miss is the useful bit. The listing said **debt repayment worksheet** and th
 
 <!-- Before publishing: replace the URL below with the public GitHub repository. -->
 
-[PromiseDiff source code](https://github.com/REPLACE_WITH_OWNER/PromiseDiff)
+[PromiseDiff source code](https://github.com/icesurf666/PromiseDiff)
 
 The repository has the local setup, real example PDF, test commands, security notes, and benchmark runner.
 
