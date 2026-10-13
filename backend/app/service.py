@@ -44,6 +44,13 @@ async def semantic_findings(client: OllamaClient, claims: list[Claim], documents
     context = excerpts(documents, references)
     response = await client.structured(semantic_prompt(claims, context), SemanticResults)
     by_id = {item.claim_id: item for item in response.results}
+    unresolved = [
+        claim for claim in claims
+        if not valid_semantic_item(by_id.get(claim.id), documents)
+    ]
+    if unresolved:
+        retry = await client.structured(semantic_prompt(unresolved, context), SemanticResults)
+        by_id.update({item.claim_id: item for item in retry.results})
     findings = []
     for claim in claims:
         item = by_id.get(claim.id)
@@ -60,6 +67,14 @@ async def semantic_findings(client: OllamaClient, claims: list[Claim], documents
     if len(references) < total_pages:
         warning = [f"Semantic review examined {len(references)} of {total_pages} pages."]
     return findings, warning
+
+
+def valid_semantic_item(item: SemanticItem | None, documents: list[InspectedPdf]) -> bool:
+    if not item or not item.supported or not all((item.filename, item.page, item.quote)):
+        return False
+    return validate_text_evidence(
+        DocumentTextEvidence(filename=item.filename, page=item.page, quote=item.quote), documents
+    )
 
 
 def summarize(findings: list[Finding]) -> Summary:
