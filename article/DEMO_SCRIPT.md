@@ -1,10 +1,10 @@
 # PromiseDiff demo script
 
-1. Open the local app and say: “PromiseDiff checks that digital-product listings match the files a customer downloads.”
-2. Click **Try Example**. Show the real 48-page PDF name and prefilled listing.
-3. Click **Verify Product**. Do not narrate fake progress; say Gemma is evaluating locally through Ollama.
-4. Point to the deterministic result: exact page count is supported with metadata evidence.
-5. Point to the contradiction: A4 exists, US Letter does not, so the listing claim fails.
-6. Expand a semantic finding and show filename, page number, quote, and the `AI-interpreted` label.
+1. Open the app: “PromiseDiff is a quick last check before a digital product goes live. It compares the listing to what the customer will actually download.”
+2. Click **Try Example**. Point out the real 48-page PDF and the prefilled listing.
+3. Click **Verify Product**. Say that Gemma is running locally through Ollama while the app checks the files.
+4. Show the straightforward result first: the PDF really does have 48 pages.
+5. Then show the miss: the listing promises A4 and US Letter, but the upload only contains A4.
+6. Open a semantic result. Point to the file, page, quote, and `AI-interpreted` label.
 7. Export the Markdown report.
-8. End with: “It does not claim missing text proves a product is wrong. It returns unverified when it cannot establish the claim.”
+8. Close with: “If the file cannot prove a claim, PromiseDiff says ‘unverified.’ It does not pretend missing text means the product is wrong.”

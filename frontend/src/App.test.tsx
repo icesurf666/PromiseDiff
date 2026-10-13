@@ -57,6 +57,15 @@ describe('PromiseDiff form', () => {
     expect(screen.getByRole('button', { name: 'EXPORT .MD' })).toBeInTheDocument()
   })
 
+  it('shows analysis coverage warnings', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ...report, warnings: ['Only 12 pages were reviewed.'] }) }))
+    render(<App />)
+    await userEvent.type(screen.getByLabelText('Product description'), 'Includes 48 pages.')
+    fireEvent.change(screen.getByLabelText('Actual download'), { target: { files: [new File(['pdf'], 'planner.pdf')] } })
+    await userEvent.click(screen.getByRole('button', { name: 'VERIFY PRODUCT' }))
+    expect(await screen.findByText('Only 12 pages were reviewed.')).toBeInTheDocument()
+  })
+
   it('rejects oversized client-side uploads', async () => {
     render(<App />)
     const oversized = new File([new Uint8Array(12 * 1024 * 1024 + 1)], 'huge.pdf')

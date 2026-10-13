@@ -55,17 +55,17 @@ async def semantic_findings(client: OllamaClient, claims: list[Claim], documents
     for claim in claims:
         item = by_id.get(claim.id)
         if not item or not item.supported or not all((item.filename, item.page, item.quote)):
-            findings.append(undecided(claim, "No validated semantic evidence was found."))
+            findings.append(undecided(claim, "We could not verify this claim from the supplied file text."))
             continue
         evidence = DocumentTextEvidence(filename=item.filename, page=item.page, quote=item.quote)
         if not validate_text_evidence(evidence, documents):
-            findings.append(undecided(claim, "The model proposed an invalid document citation."))
+            findings.append(undecided(claim, "The model suggested a citation that did not match the document."))
             continue
         findings.append(Finding(claim=claim, status=ClaimStatus.SUPPORTED, method=VerificationMethod.SEMANTIC, reason=f"AI-interpreted evidence: {item.reason}", evidence=[evidence]))
     total_pages = sum(document.page_count for document in documents)
     warning = []
     if len(references) < total_pages:
-        warning = [f"Semantic review examined {len(references)} of {total_pages} pages."]
+        warning = [f"Semantic review checked {len(references)} of {total_pages} pages; the remaining pages were not used for semantic matching."]
     return findings, warning
 
 

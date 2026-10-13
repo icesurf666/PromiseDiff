@@ -21,4 +21,4 @@ def test_incomplete_semantic_coverage_produces_warning():
     pages = tuple(PageInfo(number, "Budget planner", 1, 1) for number in range(1, 14))
     findings, warnings = asyncio.run(semantic_findings(Client(), [claim], [InspectedPdf("x.pdf", pages, False)]))
     assert findings[0].status.value == "UNVERIFIED"
-    assert warnings == ["Semantic review examined 12 of 13 pages."]
+    assert warnings == ["Semantic review checked 12 of 13 pages; the remaining pages were not used for semantic matching."]

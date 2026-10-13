@@ -8,17 +8,17 @@ tags: devchallenge, hf26challenge, gemma, opensource
 
 # I Built an AI That Checks Whether Digital Products Deliver What They Promise
 
-A digital-product listing can say “48 pages”, “A4 and US Letter editions”, and “debt repayment worksheets.” The ZIP a customer downloads can tell a very different story.
+A digital-product listing can promise “48 pages”, “A4 and US Letter editions”, and “debt repayment worksheets.” Then the customer opens the ZIP and finds something else.
 
-That mismatch is expensive in a very small-business way: refund requests, one-star reviews, support messages, and a seller losing confidence in their own release process. PromiseDiff is a local-first pre-publish QA tool for Etsy, Gumroad, template, and educational-PDF sellers.
+For a small seller, that turns into refunds, support messages, rough reviews, and the awful feeling that you missed something obvious. PromiseDiff is a local-first pre-publish check for Etsy, Gumroad, template, and educational-PDF sellers.
 
-Paste a listing. Upload the actual PDF or ZIP. Get an evidence-backed diff between the promise and the deliverable.
+Paste in the listing. Upload the actual PDF or ZIP. PromiseDiff shows what the files can back up, what they contradict, and what they simply cannot prove.
 
-**The important design choice:** PromiseDiff does not turn missing text into a failure. It distinguishes a measured contradiction from a claim that the available files simply cannot prove.
+**The rule I cared about most:** missing text is not a failure. A measured mismatch is a contradiction; a claim the files cannot prove is just unverified.
 
 ## What I built
 
-PromiseDiff separates statements into four honest outcomes:
+Every claim gets one of four plain outcomes:
 
 | Result | Meaning |
 |---|---|
@@ -27,7 +27,7 @@ PromiseDiff separates statements into four honest outcomes:
 | `UNVERIFIED` | The files do not establish the claim. Missing evidence is not a contradiction. |
 | `OUT_OF_SCOPE` | The claim needs a capability the MVP cannot test. |
 
-The important part is not that it produces a verdict. The important part is that every verdict retains its method and evidence.
+The point is not a dramatic yes-or-no verdict. Every result keeps the method and the evidence that led to it.
 
 ```mermaid
 flowchart LR
@@ -47,11 +47,11 @@ File:    budget_planner_A4.pdf → 48 pages
 Result:  SUPPORTED — DETERMINISTIC
 ```
 
-But “includes debt repayment worksheets” is semantic. A document might call it a “Loan Balance Reduction Tracker.” PromiseDiff asks Gemma to interpret actual extracted text, then accepts support only when the proposed filename, page, and quotation are validated against the PDF.
+“Includes debt repayment worksheets” is different. A PDF might call that page a “Loan Balance Reduction Tracker.” Here Gemma looks at the extracted text, but PromiseDiff only accepts the result after checking the suggested filename, page, and quote against the actual PDF.
 
 ## Demo
 
-The included demo is a real 48-page A4 Budget Planner PDF—not a mocked response.
+The demo uses a real 48-page A4 Budget Planner PDF. Nothing is mocked.
 
 The listing promises:
 
@@ -62,13 +62,13 @@ Contains monthly budget review worksheets.
 Includes savings goal trackers.
 ```
 
-The delivered file contains only the A4 edition. PromiseDiff detects the page count as supported and the missing US Letter edition as contradicted. The UI lets a seller expand evidence and export the verified report as Markdown.
+The upload only has the A4 edition. PromiseDiff confirms the page count, flags the missing US Letter version, and lets the seller open the evidence or export the report as Markdown.
 
 <!-- Before publishing: embed a 30–60 second recording here. Show Try Example → Verify Product → expanded evidence → Markdown export. -->
 
 ## Why a hybrid system instead of “ask the model”? 
 
-The system has two kinds of truth.
+Some questions have a simple answer; others need interpretation.
 
 | Question | Correct tool |
 |---|---|
@@ -77,9 +77,9 @@ The system has two kinds of truth.
 | Does a listed file exist? | Complete file inventory |
 | Does “Loan Balance Reduction Tracker” plausibly satisfy a debt-repayment claim? | Gemma plus validated quotation |
 
-Letting a language model count PDF pages is both slower and less reliable than reading the document. On the other hand, plain keyword search cannot reliably connect “debt repayment” to “loan balance reduction.” The design deliberately uses each tool only where it has evidence.
+Asking a language model to count pages is slower and worse than reading the PDF metadata. But keyword search alone will not reliably connect “debt repayment” and “loan balance reduction.” So each tool only gets the jobs it can actually support with evidence.
 
-The core safety invariant is:
+The rule underneath it all is:
 
 ```text
 missing evidence != contradiction
@@ -89,7 +89,7 @@ If the document is scanned, the claim scope is ambiguous, a citation points to a
 
 ## How I built it
 
-The application is a compact React + FastAPI modular monolith:
+It is a small React + FastAPI app, with no need for a complicated distributed setup:
 
 ```mermaid
 flowchart TB
@@ -103,9 +103,9 @@ flowchart TB
   S --> EV
 ```
 
-Security boundaries matter because an upload is untrusted. The backend limits upload bytes, PDF count, total pages, extracted text, ZIP decompression ratio, archive member type, and cumulative uncompressed bytes. It rejects traversal paths, duplicate archive entries, encrypted PDFs, nested archives, and corrupt inputs. Original uploads are never persisted.
+Uploads are untrusted, so the backend puts tight boundaries around them: size, PDF count, total pages, extracted text, ZIP ratio, file types, and expanded ZIP size. It rejects traversal paths, duplicate entries, encrypted PDFs, nested archives, and corrupt files. The original upload is never saved.
 
-The model pipeline is intentionally bounded:
+The model work is deliberately kept small:
 
 1. Gemma extracts structured promises from the listing.
 2. Python validates source quotations and normalizes measurable claims.
@@ -115,13 +115,13 @@ The model pipeline is intentionally bounded:
 
 ## Why open innovation matters
 
-PromiseDiff is useful precisely because sellers may be working with unpublished products: course materials, templates, client-facing downloads, and draft listings. When run locally, Ollama inference keeps product text and extracted PDF content on the seller’s machine by default.
+This matters because many sellers are working on unpublished material: course notes, templates, client downloads, and draft listings. With the local setup, Ollama keeps the listing text and extracted PDF text on the seller’s machine.
 
-Open-weight Gemma makes the side-hustle economics practical too. There is no per-audit third-party inference API bill when a seller runs it locally, although they still bear their own hardware or hosting cost. A seller can run the same QA process repeatedly before every release while retaining control of the model and data path.
+Open-weight Gemma also makes this affordable for a small operation. A local run has no per-audit third-party API bill, although someone still pays for the hardware or hosting. Sellers can repeat the same check before every release without handing their draft material to another service.
 
 ## Reproducible benchmark, including a failure
 
-I generated ten independently labelled synthetic PDF cases and ran them through the same local API used by the UI. The runner records raw responses and latency in `benchmark/results.json`.
+I made ten independently labelled synthetic PDF cases and ran them through the same local API the UI uses. The runner saves the raw responses and timings in `benchmark/results.json`.
 
 ```text
 exact-label accuracy = correct labels / total cases = 9 / 10 = 90%
@@ -144,13 +144,13 @@ xychart-beta
 | Median API latency | 2.11 s | Local Gemma on this machine. |
 | Mean API latency | 3.50 s | Prompt-injection case took 13.81 s. |
 
-The failed case is the most useful result. The listing claimed a **debt repayment worksheet** and the PDF said **Loan Balance Reduction Tracker**. The model did not produce evidence strong enough to accept, so PromiseDiff returned `UNVERIFIED` instead of inventing support. This is a product limitation to improve, not a benchmark result to hide.
+The miss is the useful bit. The listing said **debt repayment worksheet** and the PDF said **Loan Balance Reduction Tracker**. The model did not have strong enough evidence to connect them, so PromiseDiff returned `UNVERIFIED` instead of pretending it knew. That is a limitation to fix, not a result to hide.
 
 ## Known limitations
 
-- The benchmark is intentionally small and synthetic; it does not establish performance on the full diversity of seller PDFs.
+- The benchmark is small and synthetic. It is not a claim about every kind of seller PDF.
 - Scanned documents without extractable text can still receive metadata checks, but semantic claims remain unverified.
-- The current retrieval pass can miss paraphrases. In the benchmark, “debt repayment worksheet” versus “Loan Balance Reduction Tracker” stayed unverified rather than being promoted to a false positive.
+- The current retrieval can miss paraphrases. In the benchmark, “debt repayment worksheet” and “Loan Balance Reduction Tracker” stayed unverified rather than becoming a false positive.
 - Public deployments should isolate PDF processing with strict resource limits.
 
 ## What I would build next
@@ -166,7 +166,7 @@ The failed case is the most useful result. The listing claimed a **debt repaymen
 
 [PromiseDiff source code](https://github.com/REPLACE_WITH_OWNER/PromiseDiff)
 
-The repository includes local setup, the real example PDF, test commands, security limitations, and the benchmark runner.
+The repository has the local setup, real example PDF, test commands, security notes, and benchmark runner.
 
 ## Prize categories
 
