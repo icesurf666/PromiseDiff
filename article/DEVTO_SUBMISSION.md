@@ -16,6 +16,8 @@ Paste in the listing. Upload the actual PDF or ZIP. PromiseDiff shows what the f
 
 **The rule I cared about most:** missing text is not a failure. A measured mismatch is a contradiction; a claim the files cannot prove is just unverified.
 
+![PromiseDiff checks listing promises against delivered files](assets/promise-diff-hero.svg)
+
 ## What I built
 
 Every claim gets one of four plain outcomes:
@@ -28,6 +30,8 @@ Every claim gets one of four plain outcomes:
 | `OUT_OF_SCOPE` | The claim needs a capability the MVP cannot test. |
 
 The point is not a dramatic yes-or-no verdict. Every result keeps the method and the evidence that led to it.
+
+![Four verdicts distinguish evidence from uncertainty](assets/verdict-matrix.svg)
 
 ```mermaid
 flowchart LR
@@ -48,6 +52,8 @@ Result:  SUPPORTED — DETERMINISTIC
 ```
 
 “Includes debt repayment worksheets” is different. A PDF might call that page a “Loan Balance Reduction Tracker.” Here Gemma looks at the extracted text, but PromiseDiff only accepts the result after checking the suggested filename, page, and quote against the actual PDF.
+
+![The verification flow combines direct measurement with semantic evidence](assets/verification-flow.svg)
 
 ## Demo
 
@@ -85,6 +91,8 @@ The rule underneath it all is:
 missing evidence != contradiction
 ```
 
+![A model citation must pass the evidence gate before it can support a claim](assets/evidence-gate.svg)
+
 If the document is scanned, the claim scope is ambiguous, a citation points to a nonexistent page, or a quote does not occur in extracted text, the answer is `UNVERIFIED`.
 
 ## How I built it
@@ -104,6 +112,8 @@ flowchart TB
 ```
 
 Uploads are untrusted, so the backend puts tight boundaries around them: size, PDF count, total pages, extracted text, ZIP ratio, file types, and expanded ZIP size. It rejects traversal paths, duplicate entries, encrypted PDFs, nested archives, and corrupt files. The original upload is never saved.
+
+![The upload boundary rejects unsafe archives before analysis](assets/security-boundaries.svg)
 
 The model work is deliberately kept small:
 
@@ -126,6 +136,8 @@ I made ten independently labelled synthetic PDF cases and ran them through the s
 ```text
 exact-label accuracy = correct labels / total cases = 9 / 10 = 90%
 ```
+
+![Nine benchmark cases matched their expected labels; one paraphrase stayed unverified](assets/benchmark-results.svg)
 
 ```mermaid
 xychart-beta
