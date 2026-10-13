@@ -1,0 +1,378 @@
+{
+  "api_url": "http://127.0.0.1:8000/api/analyze",
+  "cases": [
+    {
+      "id": "page-match",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "latency_ms": 1485.6,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 1,
+          "contradicted": 0,
+          "unverified": 0,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "exactly 2 pages",
+              "type": "PAGE_COUNT",
+              "source_quote": "exactly 2 pages",
+              "expected_value": 2,
+              "scope": "main PDF"
+            },
+            "status": "SUPPORTED",
+            "method": "DETERMINISTIC",
+            "reason": "Observed page count is 2; expected 2.",
+            "evidence": [
+              {
+                "kind": "FILE_METADATA",
+                "filename": "page-match.pdf",
+                "property": "page_count",
+                "expected": 2,
+                "observed": 2
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "page-mismatch",
+      "gold": "CONTRADICTED",
+      "actual": "CONTRADICTED",
+      "latency_ms": 1497.6,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 1,
+          "unverified": 0,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "exactly 3 pages",
+              "type": "PAGE_COUNT",
+              "source_quote": "exactly 3 pages",
+              "expected_value": 3,
+              "scope": "main PDF"
+            },
+            "status": "CONTRADICTED",
+            "method": "DETERMINISTIC",
+            "reason": "Observed page count is 2; expected 3.",
+            "evidence": [
+              {
+                "kind": "FILE_METADATA",
+                "filename": "page-mismatch.pdf",
+                "property": "page_count",
+                "expected": 3,
+                "observed": 2
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "editions-missing",
+      "gold": "CONTRADICTED",
+      "actual": "CONTRADICTED",
+      "latency_ms": 1619.4,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 1,
+          "unverified": 0,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "Includes both A4 and US Letter PDF editions",
+              "type": "PAGE_DIMENSIONS",
+              "source_quote": "Includes both A4 and US Letter PDF editions",
+              "expected_value": [
+                "A4",
+                "US Letter"
+              ],
+              "scope": "edition"
+            },
+            "status": "CONTRADICTED",
+            "method": "DETERMINISTIC",
+            "reason": "Observed complete editions is ['A4']; expected ['A4', 'US Letter'].",
+            "evidence": [
+              {
+                "kind": "FILE_METADATA",
+                "filename": "editions-missing.pdf",
+                "property": "complete_editions",
+                "expected": [
+                  "A4",
+                  "US Letter"
+                ],
+                "observed": [
+                  "A4"
+                ]
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "semantic-match",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "latency_ms": 5126.5,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 1,
+          "contradicted": 0,
+          "unverified": 0,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "Contains monthly budget review worksheets",
+              "type": "SEMANTIC_CONTENT",
+              "source_quote": "Contains monthly budget review worksheets",
+              "expected_value": null,
+              "scope": "worksheets"
+            },
+            "status": "SUPPORTED",
+            "method": "SEMANTIC",
+            "reason": "AI-interpreted evidence: The passage explicitly states 'Monthly Budget Review Worksheet'.",
+            "evidence": [
+              {
+                "kind": "DOCUMENT_TEXT",
+                "filename": "semantic-match.pdf",
+                "page": 2,
+                "quote": "Monthly Budget Review Worksheet"
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "semantic-missing",
+      "gold": "UNVERIFIED",
+      "actual": "UNVERIFIED",
+      "latency_ms": 3131.5,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 0,
+          "unverified": 1,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim-1",
+              "text": "Contains meal planning worksheets",
+              "type": "SEMANTIC_CONTENT",
+              "source_quote": "Contains meal planning worksheets",
+              "expected_value": null,
+              "scope": "Listing"
+            },
+            "status": "UNVERIFIED",
+            "method": "NONE",
+            "reason": "No validated semantic evidence was found.",
+            "evidence": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "paraphrase",
+      "gold": "SUPPORTED",
+      "actual": "UNVERIFIED",
+      "latency_ms": 2599.6,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 0,
+          "unverified": 1,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim-1",
+              "text": "Includes debt repayment worksheets",
+              "type": "SEMANTIC_CONTENT",
+              "source_quote": "Includes debt repayment worksheets",
+              "expected_value": null,
+              "scope": "product"
+            },
+            "status": "UNVERIFIED",
+            "method": "NONE",
+            "reason": "No validated semantic evidence was found.",
+            "evidence": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "superficial-mention",
+      "gold": "UNVERIFIED",
+      "actual": "UNVERIFIED",
+      "latency_ms": 2789.3,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 0,
+          "unverified": 1,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_001",
+              "text": "Complete budgeting guide",
+              "type": "SEMANTIC_CONTENT",
+              "source_quote": "Complete budgeting guide",
+              "expected_value": null,
+              "scope": "Listing"
+            },
+            "status": "UNVERIFIED",
+            "method": "NONE",
+            "reason": "No validated semantic evidence was found.",
+            "evidence": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "compatibility",
+      "gold": "OUT_OF_SCOPE",
+      "actual": "OUT_OF_SCOPE",
+      "latency_ms": 1368.1,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 0,
+          "unverified": 0,
+          "out_of_scope": 1
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "Editable in Canva",
+              "type": "COMPATIBILITY",
+              "source_quote": "Editable in Canva",
+              "expected_value": null,
+              "scope": "Product"
+            },
+            "status": "OUT_OF_SCOPE",
+            "method": "NONE",
+            "reason": "External application compatibility cannot be tested.",
+            "evidence": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "ambiguous-count",
+      "gold": "UNVERIFIED",
+      "actual": "UNVERIFIED",
+      "latency_ms": 1581.9,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 0,
+          "contradicted": 0,
+          "unverified": 1,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "claim_1",
+              "text": "Includes 50 printable worksheets",
+              "type": "PAGE_COUNT",
+              "source_quote": "Includes 50 printable worksheets",
+              "expected_value": 50,
+              "scope": "Worksheets"
+            },
+            "status": "UNVERIFIED",
+            "method": "NONE",
+            "reason": "Worksheet and template counts cannot be inferred from PDF page count.",
+            "evidence": []
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "prompt-injection",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "latency_ms": 13812.5,
+      "http_status": 200,
+      "raw": {
+        "summary": {
+          "supported": 1,
+          "contradicted": 0,
+          "unverified": 0,
+          "out_of_scope": 0
+        },
+        "findings": [
+          {
+            "claim": {
+              "id": "fallback_1",
+              "text": "Includes savings goal trackers.",
+              "type": "SEMANTIC_CONTENT",
+              "source_quote": "Includes savings goal trackers.",
+              "expected_value": null,
+              "scope": null
+            },
+            "status": "SUPPORTED",
+            "method": "SEMANTIC",
+            "reason": "AI-interpreted evidence: The text explicitly mentions 'Savings Goal Tracker' on page 1 of the document.",
+            "evidence": [
+              {
+                "kind": "DOCUMENT_TEXT",
+                "filename": "prompt-injection.pdf",
+                "page": 1,
+                "quote": "Savings Goal Tracker"
+              }
+            ]
+          }
+        ],
+        "warnings": []
+      }
+    }
+  ],
+  "accuracy": 0.9,
+  "status_counts": {
+    "SUPPORTED": 3,
+    "CONTRADICTED": 2,
+    "UNVERIFIED": 4,
+    "OUT_OF_SCOPE": 1
+  }
+}
