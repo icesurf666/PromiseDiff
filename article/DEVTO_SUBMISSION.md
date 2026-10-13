@@ -16,9 +16,9 @@ Paste in the listing. Upload the actual PDF or ZIP. PromiseDiff shows what the f
 
 **The rule I cared about most:** missing text is not a failure. A measured mismatch is a contradiction; a claim the files cannot prove is just unverified.
 
-![PromiseDiff checks listing promises against delivered files](assets/promise-diff-hero.png)
+![PromiseDiff checks listing promises against delivered files](https://www.pkazantsev.com/writing/promise-diff/promise-diff-hero.png)
 
-## What I Built
+## What I built
 
 Every claim gets one of four plain outcomes:
 
@@ -29,9 +29,9 @@ Every claim gets one of four plain outcomes:
 | `UNVERIFIED` | The files do not establish the claim. Missing evidence is not a contradiction. |
 | `OUT_OF_SCOPE` | The claim needs a capability the MVP cannot test. |
 
-The point is not a dramatic yes-or-no verdict. Every result keeps the method and the evidence that led to it.
+Every result keeps the method and the evidence that led to it.
 
-![Four verdicts distinguish evidence from uncertainty](assets/verdict-matrix.png)
+![Four verdicts distinguish evidence from uncertainty](https://www.pkazantsev.com/writing/promise-diff/verdict-matrix.png)
 
 ```mermaid
 flowchart LR
@@ -53,7 +53,7 @@ Result:  SUPPORTED — DETERMINISTIC
 
 “Includes debt repayment worksheets” is different. A PDF might call that page a “Loan Balance Reduction Tracker.” Here Gemma looks at the extracted text, but PromiseDiff only accepts the result after checking the suggested filename, page, and quote against the actual PDF.
 
-![The verification flow combines direct measurement with semantic evidence](assets/verification-flow.png)
+![The verification flow combines direct measurement with semantic evidence](https://www.pkazantsev.com/writing/promise-diff/verification-flow.png)
 
 ## Demo
 
@@ -72,11 +72,9 @@ Includes savings goal trackers.
 
 The upload only has the A4 edition. PromiseDiff confirms the page count, flags the missing US Letter version, and lets the seller open the evidence or export the report as Markdown.
 
-![A short PromiseDiff walkthrough, recorded and cut with ProgressCut](assets/progresscut-demo.gif)
+![A short PromiseDiff walkthrough, recorded and cut with ProgressCut](https://www.pkazantsev.com/writing/promise-diff/progresscut-demo.gif)
 
-<!-- Before publishing on DEV: upload this GIF and replace the local asset link with DEV's image URL. -->
-
-## How I Built It
+## How I built it
 
 ### Why a hybrid system instead of “ask the model”?
 
@@ -89,15 +87,15 @@ Some questions have a simple answer; others need interpretation.
 | Does a listed file exist? | Complete file inventory |
 | Does “Loan Balance Reduction Tracker” plausibly satisfy a debt-repayment claim? | Gemma plus validated quotation |
 
-Asking a language model to count pages is slower and worse than reading the PDF metadata. But keyword search alone will not reliably connect “debt repayment” and “loan balance reduction.” So each tool only gets the jobs it can actually support with evidence.
+Asking a language model to count pages is slower and worse than reading the PDF metadata. But keyword search alone will not reliably connect “debt repayment” and “loan balance reduction.” So each tool only gets the jobs it can support with evidence.
 
-The rule underneath it all is:
+The rule is:
 
 ```text
 missing evidence != contradiction
 ```
 
-![A model citation must pass the evidence gate before it can support a claim](assets/evidence-gate.png)
+![A model citation must pass the evidence gate before it can support a claim](https://www.pkazantsev.com/writing/promise-diff/evidence-gate.png)
 
 If the document is scanned, the claim scope is ambiguous, a citation points to a nonexistent page, or a quote does not occur in extracted text, the answer is `UNVERIFIED`.
 
@@ -119,7 +117,7 @@ flowchart TB
 
 Uploads are untrusted, so the backend puts tight boundaries around them: size, PDF count, total pages, extracted text, ZIP ratio, file types, and expanded ZIP size. It rejects traversal paths, duplicate entries, encrypted PDFs, nested archives, and corrupt files. The original upload is never saved.
 
-![The upload boundary rejects unsafe archives before analysis](assets/security-boundaries.png)
+![The upload boundary rejects unsafe archives before analysis](https://www.pkazantsev.com/writing/promise-diff/security-boundaries.png)
 
 The model work is deliberately kept small:
 
@@ -129,9 +127,9 @@ The model work is deliberately kept small:
 4. Gemma evaluates semantic correspondence in batch.
 5. Evidence validation checks filename, page, and exact quote before serialization.
 
-## Why Does Open Innovation Matter?
+## Why does open innovation matter?
 
-This matters because many sellers are working on unpublished material: course notes, templates, client downloads, and draft listings. With the local setup, Ollama keeps the listing text and extracted PDF text on the seller’s machine.
+Many sellers are working on unpublished material: course notes, templates, client downloads, and draft listings. With the local setup, Ollama keeps the listing text and extracted PDF text on the seller’s machine.
 
 Open-weight Gemma also makes this affordable for a small operation. A local run has no per-audit third-party API bill, although someone still pays for the hardware or hosting. Sellers can repeat the same check before every release without handing their draft material to another service.
 
@@ -143,7 +141,7 @@ I made ten independently labelled synthetic PDF cases and ran them through the s
 exact-label accuracy = correct labels / total cases = 9 / 10 = 90%
 ```
 
-![Nine benchmark cases matched their expected labels; one paraphrase stayed unverified](assets/benchmark-results.png)
+![Nine benchmark cases matched their expected labels; one paraphrase stayed unverified](https://www.pkazantsev.com/writing/promise-diff/benchmark-results.png)
 
 ```mermaid
 xychart-beta
@@ -184,7 +182,7 @@ The miss is the useful bit. The listing said **debt repayment worksheet** and th
 
 The repository has the local setup, real example PDF, test commands, security notes, and benchmark runner.
 
-## Prize Categories
+## Prize categories
 
 - Best Use of Gemma
 
